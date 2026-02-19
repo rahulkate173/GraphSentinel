@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import apiClient from "../services/api.js";
 import "./InputPage.scss";
 
 const InputPage = () => {
   const [file, setFile] = useState(null);
   const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleFile = selectedFile => {
     if (!selectedFile) return;
@@ -29,19 +33,16 @@ const InputPage = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
+    setLoading(true);
+    setStatus("Uploading and analyzing...");
 
     try {
-      const res = await fetch("http://localhost:5000/input", {
-        method: "POST",
-        body: formData
-      });
-
-      const data = await res.json();
-      setStatus(data.message || "Uploaded successfully");
+      await apiClient.analyzeAnomalies(file);
+      setStatus("Analysis complete! Redirecting to results...");
+      setTimeout(() => navigate("/graph"), 1200);
     } catch (err) {
-      setStatus("Upload failed");
+      setStatus(err.message || "Upload failed");
+      setLoading(false);
     }
   };
 
@@ -69,8 +70,8 @@ const InputPage = () => {
         {file && <p className="file-name">{file.name}</p>}
       </div>
 
-      <button className="upload-btn" onClick={handleUpload}>
-        Upload to Backend
+      <button className="upload-btn" onClick={handleUpload} disabled={loading}>
+        {loading ? "Processing..." : "Upload to Backend"}
       </button>
 
       {status && <p className="status">{status}</p>}

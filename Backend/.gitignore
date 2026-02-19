@@ -1,9 +1,0 @@
-# Python environment
-venv/
-__pycache__/
-*.pyc
-
-# Local Data 
-data_storage/
-*.csv
-*.json
