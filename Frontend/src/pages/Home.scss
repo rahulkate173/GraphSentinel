@@ -1,0 +1,169 @@
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;;
+}
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+#root,html{
+    width: 100%;
+    height: 100%;
+}
+.home {
+  background: #070b14;
+  color: #ffffff;
+  min-height: 100vh;
+  padding: 0 80px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* NAVBAR */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 0;
+
+  .logo {
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+    color: #cfd3dc;
+    cursor: pointer;
+
+    li:hover {
+      color: white;
+    }
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 15px;
+
+    .signin {
+      background: transparent;
+      border: none;
+      color: #cfd3dc;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: #4f6ef7;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.3s ease;
+
+      &:hover {
+        background: #6b86ff;
+      }
+    }
+  }
+}
+
+/* HERO SECTION */
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: 60px;
+
+  .hero-left {
+    flex: 1;
+
+    .tag {
+      display: inline-block;
+      background: #163c2f;
+      color: #4af2b3;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      font-size: 56px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      max-width: 600px;
+    }
+
+    p {
+      color: #9aa3b2;
+      font-size: 18px;
+      margin-bottom: 30px;
+      max-width: 520px;
+    }
+
+    .cta {
+      background: #4f6ef7;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+
+      &:hover {
+        background: #6b86ff;
+      }
+    }
+  }
+
+  .hero-right {
+    flex: 1;
+    height: 680px;
+
+    canvas {
+      border-radius: 20px;
+    }
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1024px) {
+  .home {
+    padding: 0 30px;
+  }
+
+  .hero {
+    flex-direction: column;
+    text-align: center;
+
+    .hero-left {
+      align-items: center;
+
+      h1 {
+        font-size: 42px;
+      }
+    }
+
+    .hero-right {
+      height: 450px;
+      width: 100%;
+    }
+  }
+
+  .nav-links {
+    display: none;
+  }
+}
