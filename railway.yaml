@@ -1,0 +1,28 @@
+# Railway service configuration for multi-service deployment
+# This file is optional but recommended for managing both services
+
+services:
+  backend:
+    build:
+      dockerfile: Dockerfile.backend
+      context: .
+    port: 8000
+    environment:
+      PORT: 8000
+    deploy:
+      restartPolicy: on_failure
+      restartPolicyMaxRetries: 5
+
+  frontend:
+    build:
+      dockerfile: Dockerfile.frontend
+      context: .
+    port: 3000
+    environment:
+      PORT: 3000
+      VITE_API_URL: ${{ services.backend.public_url }}
+    deploy:
+      restartPolicy: on_failure
+      restartPolicyMaxRetries: 5
+    depends_on:
+      - backend
