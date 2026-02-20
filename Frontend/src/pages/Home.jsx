@@ -26,9 +26,9 @@ const Home = () => {
           {/* <button className="cta">
            
           </button> */}
-          <Link  to="/login" className="secondary-btn cta">
+          {/* <Link  to="/login" className="secondary-btn cta">
               Get Started →
-            </Link>
+            </Link> */}
         </div>
 
         <div className="hero-right">
