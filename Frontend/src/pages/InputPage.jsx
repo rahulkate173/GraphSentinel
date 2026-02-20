@@ -70,7 +70,7 @@ const InputPage = () => {
       </div>
 
       <button className="upload-btn" onClick={handleUpload}>
-        Upload to Backend
+        Upload 
       </button>
 
       {status && <p className="status">{status}</p>}

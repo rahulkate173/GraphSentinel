@@ -1,25 +1,21 @@
 import React from "react";
+import "./About.scss";
 
-const About = () => {
-  return (
-    <section className="page about-page">
-      <h1>About Rift</h1>
-      <p>
-        Rift is a fraud network exploration tool that turns raw transaction CSV
-        data into an interactive graph.
-      </p>
-      <p>
-        It highlights 3-node cycles (fraud rings) in red, so analysts can
-        quickly spot suspicious circular flows of money and investigate the
-        accounts involved.
-      </p>
-      <p>
-        The system is designed to plug into your backend, accept CSV exports,
-        and visualize complex relationships that are hard to see in tables.
-      </p>
-    </section>
-  );
-};
+const About = () => (
+  <section className="about">
+    <h1>About GraphSentinel</h1>
+    <p>
+      GraphSentinel is a modern web application designed to help businesses detect and prevent fraudulent activities in their financial operations. By leveraging advanced graph analysis and visualization, users can spot suspicious accounts, analyze transaction patterns, and gain actionable insights.
+    </p>
+    <p>
+      The platform supports CSV uploads, interactive graph views, and detailed fraud ring summaries, making it a comprehensive tool for risk management and fraud detection.
+    </p>
+    <p>
+      Built with React, Vite, and Clerk authentication, GraphSentinel offers a seamless and secure user experience.
+    </p>
+  </section>
+);
 
 export default About;
+
 

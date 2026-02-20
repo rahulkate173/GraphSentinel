@@ -4,6 +4,9 @@ import Spline from "@splinetool/react-spline";
 import "./Home.scss";
 import { Link } from "react-router-dom";
 
+import Features from "./Features";
+import Footer from "../components/Footer";
+
 const Home = () => {
   return (
     <section className="home">
@@ -32,6 +35,8 @@ const Home = () => {
           <Spline scene="https://prod.spline.design/ezuHoP10ut-qcydA/scene.splinecode" />
         </div>
       </div>
+   <Features/>
+   <Footer/>
     </section>
   );
 };
