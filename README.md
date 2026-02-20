@@ -13,9 +13,7 @@ GraphSentinel is a modern web application for detecting and visualizing fraudule
 - [Usage](#usage)
 - [API Overview](#api-overview)
 - [Deployment](#deployment)
-- [Troubleshooting](#troubleshooting)
-- [Resources](#resources)
-- [License](#license)
+
 
 ---
 
@@ -63,14 +61,73 @@ GraphSentinel is a modern web application for detecting and visualizing fraudule
 git clone https://github.com/your-username/GraphSentinel.git
 cd GraphSentinel
 
+Start with Docker Compose:
+
 docker-compose up -d
 
-Backend
+Frontend: http://localhost:3000
+
+Backend: http://localhost:8000
+
+API Docs: http://localhost:8000/docs
+
+Manual Setup (without Docker):
+
+Backend:
+
 cd backend
 pip install -r ../requirements.txt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
-Frontend
+Frontend:
+
 cd frontend
 npm install
 npm run dev
+
+---
+
+##Usage
+
+Upload CSV: Go to the Input page and upload your transaction CSV file. Ensure it includes the following columns:
+sender_id, receiver_id, transaction_id, amount, timestamp
+
+Analyze: The backend processes the file, detects fraud rings and suspicious accounts, and stores results.
+
+View Results: Results are visualized as interactive graphs and tables on the Graph page.
+
+Download Report: Download the JSON report for further analysis.
+
+---
+##API Overview
+
+POST /api/v1/anomalies/analyze – Upload CSV for analysis
+
+GET /api/v1/anomalies/results – Get latest analysis results
+
+GET /api/v1/anomalies/download – Download results as JSON
+
+GET / – API status
+
+GET /health – Health check
+
+See backend/app/main.py
+ for implementation details.
+
+---
+###Deployment
+Railway (Production)
+
+Push code to GitHub.
+
+Deploy Backend: Add service with Dockerfile.backend, port 8000.
+
+Deploy Frontend: Add service with Dockerfile.frontend, port 3000. Set VITE_API_URL to backend URL.
+
+Set environment variables as needed.
+
+Other Options
+
+Vercel / Netlify: Frontend can be deployed separately.
+
+Custom Domain: Configure via Railway dashboard.
