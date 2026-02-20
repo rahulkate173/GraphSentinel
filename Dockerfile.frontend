@@ -7,10 +7,14 @@ WORKDIR /app
 COPY Frontend/package.json Frontend/package-lock.json* ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy source code
-COPY Frontend/ ./
+COPY Frontend/src ./src
+COPY Frontend/public ./public
+COPY Frontend/index.html ./
+COPY Frontend/vite.config.js ./
+COPY Frontend/eslint.config.js ./
 
 # Build the app
 RUN npm run build
