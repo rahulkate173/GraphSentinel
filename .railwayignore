@@ -1,0 +1,20 @@
+# Files to ignore during Railway deployment
+node_modules/
+npm-debug.log
+dist/
+build/
+.git/
+.gitignore
+README.md
+.env
+.env.local
+.DS_Store
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+env/
+venv/
+frontend_deployment.sh
+backend_deployment.sh
+.railway/
