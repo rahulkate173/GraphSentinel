@@ -1,26 +1,17 @@
-// import { SignIn, SignedIn, SignedOut } from "@clerk/clerk-react";
-// import { Navigate } from "react-router-dom";
-// import './Login.scss'
-// function Login() {
-//   return (
-//     <div className="admin-login-page">
-//       {/* <div className="login-card"> */}
-        
-//         <SignedOut>
-//           <SignIn
-//             routing="hash"
-//             afterSignInUrl="/"
-//             afterSignUpUrl="/"
-//           />
-//         </SignedOut>
+import React from 'react';
+import './Login.scss';
 
-//         <SignedIn>
-//           <Navigate to="/" replace />
-//         </SignedIn>
+function Login() {
+	// Temporary placeholder Login component to avoid build errors
+	// Replace with Clerk-based implementation once VITE_CLERK_PUBLISHABLE_KEY is set
+	return (
+		<div className="admin-login-page">
+			<div className="login-card">
+				<h2>Sign in</h2>
+				<p>Please sign in to continue.</p>
+			</div>
+		</div>
+	);
+}
 
-//       {/* </div> */}
-//     </div>
-//   );
-// }
-
-// export default Login;
+export default Login;
