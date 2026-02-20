@@ -69,9 +69,9 @@ const InputPage = () => {
 
         {file && <p className="file-name">{file.name}</p>}
       </div>
+      <button className="upload-btn" onClick={handleUpload}>
+        Upload 
 
-      <button className="upload-btn" onClick={handleUpload} disabled={loading}>
-        {loading ? "Processing..." : "Upload to Backend"}
       </button>
 
       {status && <p className="status">{status}</p>}

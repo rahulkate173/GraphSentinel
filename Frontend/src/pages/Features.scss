@@ -1,0 +1,73 @@
+.features {
+  padding: 78px 0 64px 0;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+
+  border-radius: 0;
+  box-shadow: none;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+.features h1 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: white;
+  text-align: center;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+.feature-card {
+  background: linear-gradient(135deg, #10151a 70%, #232526 100%);
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(44,83,100,0.18);
+  padding: 40px 28px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.2s;
+  border: 2.5px solid #1e3a8a;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  /* Neon blue glow */
+  box-shadow: 0 0 16px 2px #1e3a8acc, 0 6px 32px rgba(44,83,100,0.18);
+}
+.feature-card:hover {
+  transform: translateY(-8px) scale(1.04);
+  box-shadow: 0 0 32px 6px #1e3a8acc, 0 12px 40px #1e3a8acc;
+  border-color: #1e3a8acc;
+}
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 22px;
+  color: #1e3a8acc;
+  filter: drop-shadow(0 0 12px #1e3a8a) drop-shadow(0 0 18px #1e3a8acc);
+  transition: filter 0.2s, color 0.2s;
+}
+.feature-card:hover .feature-icon {
+  color: #1e90ff;
+  filter: drop-shadow(0 0 18px #1e3a8acc) drop-shadow(0 0 24px #1e3a8a);
+}
+.feature-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 14px;
+  color: #fff;
+  text-align: center;
+  font-weight: 600;
+}
+.feature-card p {
+  font-size: 1.08rem;
+  color: white;
+  text-align: center;
+  line-height: 1.6;
+}
