@@ -1,8 +1,7 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Network } from "vis-network/standalone";
-import Papa from "papaparse";
 import "vis-network/styles/vis-network.css";
+import apiClient from "../services/api.js";
 import "./Graph.scss";
 
 const NetworkGraph = () => {
@@ -12,49 +11,62 @@ const NetworkGraph = () => {
 
   const [backendData, setBackendData] = useState(null);
   const [transactions, setTransactions] = useState([]);
-  const [allTransactions, setAllTransactions] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [fraudRings, setFraudRings] = useState([]);
   const [suspiciousAccounts, setSuspiciousAccounts] = useState([]);
   const [allAccounts, setAllAccounts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // -------- DATA FETCHING --------
+  // -------- DATA FETCHING (backend /api/v1/anomalies/results) --------
   useEffect(() => {
-    fetch("/output")
-      .then(res => (res.ok ? res.json() : Promise.reject()))
-      .then(data => {
-        setBackendData(data);
-        setFraudRings(data.fraud_rings || []);
-        setSuspiciousAccounts(data.suspicious_accounts || []);
-      })
-      .catch(() => {
-        fetch("/output.json")
-          .then(res => res.json())
-          .then(data => {
-            setBackendData(data);
-            setFraudRings(data.fraud_rings || []);
-            setSuspiciousAccounts(data.suspicious_accounts || []);
-          });
-      });
+    let cancelled = false;
 
-    fetch("/transactions.csv")
-      .then(res => res.text())
-      .then(csv => {
-        const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
-        setTransactions(parsed.data);
-      })
-      .catch(() => console.log("Using ring-based edges only."));
+    async function load() {
+      try {
+        setLoading(true);
+        const data = await apiClient.getResults();
+        if (cancelled) return;
+        if (data) {
+          setBackendData(data);
+          setFraudRings(data.fraud_rings || []);
+          setSuspiciousAccounts(data.suspicious_accounts || []);
+        } else {
+          setBackendData({
+            suspicious_accounts: [],
+            fraud_rings: [],
+            summary: { total_accounts_analyzed: 0, suspicious_accounts_flagged: 0, fraud_rings_detected: 0, processing_time_seconds: 0 },
+          });
+          setFraudRings([]);
+          setSuspiciousAccounts([]);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setBackendData({
+            suspicious_accounts: [],
+            fraud_rings: [],
+            summary: { total_accounts_analyzed: 0, suspicious_accounts_flagged: 0, fraud_rings_detected: 0, processing_time_seconds: 0 },
+          });
+          setFraudRings([]);
+          setSuspiciousAccounts([]);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => { cancelled = true; };
   }, []);
 
   // -------- GRAPH BUILDING --------
   useEffect(() => {
     if (!backendData) return;
 
-    const { suspicious_accounts, fraud_rings } = backendData;
+    const { suspicious_accounts = [], fraud_rings = [], transactions: backendTransactions = [] } = backendData;
 
-    // Generate transactions for rings if CSV is empty
+    // Use backend transactions (from CSV) when available; else generate from rings
     const generatedTransactions = [];
-    fraud_rings.forEach((ring, rIdx) => {
+    (fraud_rings || []).forEach((ring, rIdx) => {
       const members = ring.member_accounts || [];
       members.forEach((from, i) => {
         const to = members[(i + 1) % members.length];
@@ -68,13 +80,17 @@ const NetworkGraph = () => {
       });
     });
 
-    const mergedTransactions = [...transactions, ...generatedTransactions];
-    setAllTransactions(mergedTransactions);
+    const mergedTransactions = backendTransactions.length > 0 ? backendTransactions : generatedTransactions;
+    setTransactions(mergedTransactions);
     transactionsRef.current = mergedTransactions;
 
-    const allRingMembers = new Set(fraud_rings.flatMap(r => r.member_accounts));
-    const suspiciousMap = Object.fromEntries(suspicious_accounts.map(acc => [acc.account_id, acc]));
-    const accountSet = new Set([...suspicious_accounts.map(a => a.account_id), ...allRingMembers]);
+    const allRingMembers = new Set((fraud_rings || []).flatMap(r => r.member_accounts || []));
+    const suspiciousMap = Object.fromEntries((suspicious_accounts || []).map(acc => [acc.account_id, acc]));
+    const accountSet = new Set([
+      ...(suspicious_accounts || []).map(a => a.account_id),
+      ...allRingMembers,
+      ...mergedTransactions.flatMap(tx => [tx.sender_id, tx.receiver_id]),
+    ]);
 
     // 1. GENERATE NODES WITH NEON GROUPS
     const nodes = Array.from(accountSet).map(accountId => {
@@ -161,19 +177,39 @@ const NetworkGraph = () => {
     });
 
     networkRef.current = network;
-  }, [backendData, transactions]);
+  }, [backendData]);
 
-  const downloadJSON = () => {
-    const blob = new Blob([JSON.stringify(backendData, null, 2)], { type: "application/json" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "fraud_analysis.json";
-    link.click();
+  const downloadJSON = async () => {
+    try {
+      const blob = await apiClient.downloadResults();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "money_muling_report.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      if (backendData) {
+        const blob = new Blob([JSON.stringify(backendData, null, 2)], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "fraud_analysis.json";
+        link.click();
+      }
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="graph-wrapper">
+        <div style={{ padding: "2rem", textAlign: "center" }}>Loading analysis results...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="graph-wrapper">
-      <button onClick={downloadJSON} className="download-btn">Download JSON Output</button>
+      <button onClick={downloadJSON} className="download-btn" disabled={!backendData}>Download JSON Output</button>
       <div className="network-area-wrapper">
         <div ref={containerRef} className="network-area" />
         <div
